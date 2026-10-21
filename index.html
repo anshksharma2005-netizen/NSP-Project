@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CODESTORM Clinical | Patient Case Management</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div id="login" class="login-shell">
+  <div class="login-page">
+    <header class="login-top">
+      <div class="brand-lockup">
+        <span class="medical-mark"><span>+</span></span>
+        <div><strong>CODESTORM</strong><small>Patient Case Taking Software</small></div>
+      </div>
+      <div class="login-help">Local clinical workspace</div>
+    </header>
+
+    <section class="login-welcome">
+      <p class="kicker">PATIENT CASE MANAGEMENT</p>
+      <h1>Welcome to <span>CODESTORM</span></h1>
+      <p>Choose your role to continue</p>
+      <div class="welcome-line"></div>
+    </section>
+
+    <section class="role-login-grid">
+      <article class="role-card doctor-card">
+        <div class="role-card-head">
+          <div class="role-icon">♧</div>
+          <div><h2>Login as Doctor</h2><p>Manage patient cases, appointments and referrals.</p></div>
+        </div>
+        <div class="feature-list">
+          <div><b>Case Records</b><span>Record and review patient history</span></div>
+          <div><b>Appointments</b><span>Manage visits and follow-ups</span></div>
+          <div><b>Referrals & Messages</b><span>Coordinate care with patients and doctors</span></div>
+        </div>
+        <div class="role-form">
+          <label>Doctor Email / Username<input id="doctorUser" placeholder="Doctor username or email" value="doctor1"></label>
+          <label>Password<input id="doctorPass" type="password" placeholder="Password" value="doctor123"></label>
+          <label class="compact-label">Doctor profile for Google sign-in<select id="doctorGoogleId"><option value="">Select doctor profile</option><option value="1">Dr. Arjun Mehta</option><option value="2">Dr. Priya Sharma</option><option value="3">Dr. Rahul Verma</option><option value="4">Dr. Neha Kapoor</option></select></label>
+          <button class="primary wide role-submit" onclick="login('doctor')">Login as Doctor <span>→</span></button>
+          <button class="google wide" onclick="googleLogin('doctor')"><span class="google-g">G</span> Continue with Google</button>
+        </div>
+      </article>
+
+      <div class="role-or">OR</div>
+
+      <article class="role-card patient-card">
+        <div class="role-card-head">
+          <div class="role-icon patient-icon">●</div>
+          <div><h2>Login as Patient</h2><p>View your health record and stay connected with your doctor.</p></div>
+        </div>
+        <div class="feature-list">
+          <div><b>My Health Record</b><span>View your recorded case information</span></div>
+          <div><b>Appointments</b><span>Book and manage your visits</span></div>
+          <div><b>Doctor Communication</b><span>Message your registered doctor</span></div>
+        </div>
+        <div class="role-form">
+          <label>Patient Email<input id="patientUser" placeholder="name@example.com"></label>
+          <label>Password<input id="patientPass" type="password" placeholder="Password"></label>
+          <button class="patient-submit wide" onclick="login('patient')">Login as Patient <span>→</span></button>
+          <button class="google wide" onclick="googleLogin('patient')"><span class="google-g">G</span> Continue with Google</button>
+          <button class="register-link" onclick="showLoginTab('register')">New patient? Create an account</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="login-footer">
+      <div><b>Secure & Confidential</b><span>Local patient records</span></div>
+      <div><b>Appointments & Referrals</b><span>Connected clinical workflow</span></div>
+      <div><b>Patient–Doctor Messaging</b><span>Communication with the registered doctor</span></div>
+    </section>
+
+    <section id="registerPanel" class="register-overlay hidden">
+      <div class="register-card">
+        <div class="register-head"><div><p class="kicker">NEW PATIENT</p><h2>Create patient account</h2><p>Complete the required information to register.</p></div><button class="close-register" onclick="showLoginTab('patient')">×</button></div>
+        <div class="form-grid">
+          <label class="field full">Full name<input id="regName" placeholder="Patient full name"></label>
+          <label class="field full">Email<input id="regEmail" type="email" placeholder="name@example.com"></label>
+          <label class="field">Phone<input id="regPhone" placeholder="Mobile number"></label>
+          <label class="field">Password<input id="regPass" type="password" placeholder="At least 6 characters"></label>
+          <label class="field full">Were you referred by another doctor?<select id="regReferred" required onchange="toggleReferralField('regReferred','regRefDoctor')"><option value="">Select an option</option><option value="Yes">Yes</option><option value="No">No</option></select></label>
+          <label class="field full hidden" id="regRefDoctorWrap">Referring doctor<input id="regRefDoctor" placeholder="Doctor name"></label>
+        </div>
+        <p class="form-note">Your registered doctor is selected when you book your first appointment. Future appointments remain with that doctor unless the case is referred.</p>
+        <div class="form-actions"><button class="ghost" onclick="showLoginTab('patient')">Cancel</button><button class="primary" onclick="registerPatient()">Create patient account</button><button class="google" onclick="googleLogin('patient',true)"><span class="google-g">G</span> Register with Google</button></div>
+      </div>
+    </section>
+    <div id="loginErr" class="login-error"></div><div id="googleNote" class="setup-note"></div>
+  </div>
+</div></div>
+
+<div id="app" class="hidden app-shell">
+  <aside class="sidebar">
+    <div class="brand-mark compact"><span class="brand-square">C</span><div><strong>CODESTORM</strong><small>Clinical workspace</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav id="doctorNav"><button class="nav active" data-page="dashboard"><span>Dashboard</span></button><button class="nav" data-page="patients"><span>Patients</span></button><button class="nav" data-page="cases"><span>Case records</span></button><button class="nav" data-page="appointments"><span>Appointments</span></button><button class="nav" data-page="messages"><span>Patient messages</span></button><button class="nav" data-page="ai-assistant"><span>AI Assistant</span></button><button class="nav" data-page="newcase"><span>New case</span></button></nav>
+    <nav id="patientNav" class="hidden"><button class="nav active" data-page="myrecord"><span>My health record</span></button><button class="nav" data-page="appointments"><span>My appointments</span></button><button class="nav" data-page="messages"><span>Messages</span></button><button class="nav" data-page="ai-assistant"><span>AI Assistant</span></button></nav>
+    <div class="sidebar-bottom"><div class="status-dot"><i></i> Local workspace</div><div id="who"></div></div>
+  </aside>
+  <main class="main-shell">
+    <header class="topbar"><div><p class="kicker" id="pageSection">CLINICAL WORKSPACE</p><h2 id="pageTitle">Doctor Dashboard</h2></div><div class="top-actions"><div class="notification-wrap"><button id="notificationSoundBtn" class="ghost notification-sound-btn" onclick="toggleNotificationSound()" title="Notification sound on">🔊</button><button class="ghost notification-btn" onclick="toggleNotifications()" aria-label="Notifications">🔔<span id="notificationBadge" class="notification-badge hidden">0</span></button><div id="notificationPanel" class="notification-panel hidden"></div></div><button class="ghost" onclick="refreshAll()">Refresh</button><button class="danger" onclick="logout()">Sign out</button></div></header>
+    <section id="content" class="content-area"></section>
+  </main>
+</div>
+<script src="/static/app.js?v=34"></script>
+</body></html>
